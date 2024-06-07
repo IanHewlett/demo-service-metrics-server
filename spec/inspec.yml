@@ -1,0 +1,12 @@
+name: metrics-server
+title: InSpec Profile for Core Service metrics-server
+license: MIT
+version: 0.1.3
+inspec_version: '~> 6'
+inputs:
+  - name: management_node_group_name
+    description: management_node_group_name
+    type: string
+  - name: management_node_group_role
+    description: management_node_group_role
+    type: string

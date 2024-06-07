@@ -1,0 +1,37 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: metrics-server
+  namespace: kube-system
+spec:
+  releaseName: metrics-server
+  chart:
+    spec:
+      chart: metrics-server
+      version: 0.1.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: metrics-server
+        namespace: kube-system
+#      verify:
+#        provider: cosign
+#        secretRef:
+#          name: cosign-signing-key
+  interval: 1m0s
+  install:
+    remediation:
+      retries: 3
+  valuesFrom:
+    - kind: ConfigMap
+      name: metrics-server-release-values
+      valuesKey: values.yaml
+    - kind: Secret
+      name: cluster-metadata
+      valuesKey: management_node_group_name
+      targetPath: metrics-server.nodeSelector.nodegroup
+    - kind: Secret
+      name: cluster-metadata
+      valuesKey: management_node_group_role
+      targetPath: metrics-server.tolerations[0].value
